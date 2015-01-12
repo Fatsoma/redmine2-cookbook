@@ -119,6 +119,7 @@ bundle_install_command =
   when 'postgresql'
     "#{bundle_command} install --without development test mysql sqlite rmagick"
   end
+bundle_install_command += ' --path vendor/bundle'
 
 execute bundle_install_command do
   user node[:redmine][:user]
