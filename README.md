@@ -13,7 +13,7 @@ Tested on ubuntu 12.04, 14.04
 ### cookbooks
 
 * postgresql
-* [rbenv](https://github.com/fnichol/chef-rbenv)
+* [rbenv](https://github.com/RiotGamesCookbooks/rbenv-cookbook)
 * [ruby_build](https://github.com/fnichol/chef-ruby_build)
 * nginx
 * runit
@@ -40,7 +40,7 @@ Tested on ubuntu 12.04, 14.04
 To install via librarian-chef add to your Cheffile the following lines
 
 ```
-cookbook 'rbenv', git: 'https://github.com/fnichol/chef-rbenv'
+cookbook 'rbenv', git: 'https://github.com/RiotGamesCookbooks/rbenv-cookbook'
 cookbook 'redmine2', git: 'https://github.com/aminin/redmine2-cookbook'
 ```
 

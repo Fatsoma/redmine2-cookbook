@@ -8,7 +8,7 @@ version          '0.4.2'
 
 conflicts 'redmine'
 
-depends 'rbenv'      # https://github.com/fnichol/chef-rbenv
+depends 'rbenv'      # https://github.com/RiotGamesCookbooks/rbenv-cookbook
 depends 'ruby_build' # https://github.com/fnichol/chef-ruby_build
 depends 'nginx'
 depends 'runit'

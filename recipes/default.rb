@@ -38,21 +38,16 @@ if node[:redmine][:ruby_version] == 'system'
   ruby_command = 'ruby'
 else
   # Install ruby with rbenv
-  node.default['rbenv']['user_installs'] = [
-      {
-          user: node[:redmine][:user],
-          rubies: [node[:redmine][:ruby_version]],
-          global: node[:redmine][:ruby_version],
-          gems: {
-              node[:redmine][:ruby_version] => [
-                  { name: 'bundler' }
-              ]
-          }
-      }
-  ]
-
+  include_recipe 'rbenv::default'
   include_recipe 'ruby_build'
-  include_recipe 'rbenv::user'
+
+  rbenv_ruby node[:redmine][:ruby_version] do
+    global false
+  end
+
+  rbenv_gem 'bundler' do
+    ruby_version node[:redmine][:ruby_version]
+  end
 
   bundle_command = "#{node[:redmine][:home]}/.rbenv/shims/bundle"
   rake_command = "#{node[:redmine][:home]}/.rbenv/shims/rake"
