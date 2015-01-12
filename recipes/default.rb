@@ -42,16 +42,16 @@ else
   include_recipe 'ruby_build'
 
   rbenv_ruby node[:redmine][:ruby_version] do
-    global false
+    global true
   end
 
   rbenv_gem 'bundler' do
     ruby_version node[:redmine][:ruby_version]
   end
 
-  bundle_command = "#{node[:redmine][:home]}/.rbenv/shims/bundle"
-  rake_command = "#{node[:redmine][:home]}/.rbenv/shims/rake"
-  ruby_command = "#{node[:redmine][:home]}/.rbenv/shims/ruby"
+  bundle_command = "#{node[:rbenv][:root]}/shims/bundle"
+  rake_command = "#{node[:rbenv][:root]}/shims/rake"
+  ruby_command = "#{node[:rbenv][:root]}/shims/ruby"
 end
 
 # Download archive with source code
