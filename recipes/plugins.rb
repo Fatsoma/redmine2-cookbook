@@ -17,19 +17,21 @@
 # limitations under the License.
 #
 
-package "git-core"
-package "unzip"
+package 'git-core'
+package 'unzip'
 
-bundle_command = "#{node[:redmine][:home]}/.rbenv/shims/bundle"
-rake_command = "#{node[:redmine][:home]}/.rbenv/shims/rake"
-bundle_install_command = case node[:redmine][:db][:type]
+bundle_command = "#{node[:rbenv][:root]}/shims/bundle"
+rake_command = "#{node[:rbenv][:root]}/shims/rake"
+bundle_install_command =
+  case node[:redmine][:db][:type]
   when 'sqlite'
     "#{bundle_command} install --without development test mysql postgresql rmagick"
   when 'mysql'
     "#{bundle_command} install --without development test postgresql sqlite rmagick"
   when 'postgresql'
     "#{bundle_command} install --without development test mysql sqlite rmagick"
-end
+  end
+bundle_install_command += ' --path vendor/bundle'
 
 execute bundle_install_command do
   user node[:redmine][:user]
@@ -43,19 +45,19 @@ execute "RAILS_ENV='production' #{rake_command} redmine:plugins:migrate" do
   action :nothing
 end
 
-service "redmine" do
-  supports :status => true, :start => true, :stop => true, :restart => true
+service 'redmine' do
+  supports status: true, start: true, stop: true, restart: true
   action :nothing
 end
 
 plugins = node[:redmine][:plugins]
 
-if ! plugins.nil? && ! plugins.empty?
+if !plugins.nil? && !plugins.empty?
 
   plugins.each do |plugin|
 
     case plugin[:type]
-    when "git" then
+    when 'git' then
       rev = plugin[:revision] || 'master'
       git "#{node[:redmine][:home]}/redmine-#{node[:redmine][:version]}/plugins/#{plugin[:name]}" do
         repository plugin[:source]
@@ -63,14 +65,14 @@ if ! plugins.nil? && ! plugins.empty?
         action :sync
         notifies :run, "execute[#{bundle_install_command}]", :delayed
         notifies :run, "execute[RAILS_ENV='production' #{rake_command} redmine:plugins:migrate]", :delayed
-        notifies :restart, "service[redmine]", :delayed
+        notifies :restart, 'service[redmine]', :delayed
       end
 
-    when "zip" then
+    when 'zip' then
       zipfile = File.basename(plugin[:source])
       # FC041
       bash "Deploy #{plugin[:name]}" do
-        cwd "/tmp"
+        cwd '/tmp'
         code <<-EOF
           wget #{plugin[:source]}
           unzip #{zipfile}
@@ -79,10 +81,9 @@ if ! plugins.nil? && ! plugins.empty?
         EOF
         notifies :run, "execute[#{bundle_install_command}]", :delayed
         notifies :run, "execute[RAILS_ENV='production' #{rake_command} redmine:plugins:migrate]", :delayed
-        notifies :restart, "service[redmine]", :delayed
-        not_if { ::File.exists?("#{node[:redmine][:home]}/redmine-#{node[:redmine][:version]}/plugins/#{plugin[:name]}") }
+        notifies :restart, 'service[redmine]', :delayed
+        not_if { ::File.exist?("#{node[:redmine][:home]}/redmine-#{node[:redmine][:version]}/plugins/#{plugin[:name]}") }
       end
     end
   end
 end
-

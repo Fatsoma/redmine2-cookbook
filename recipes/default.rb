@@ -38,36 +38,31 @@ if node[:redmine][:ruby_version] == 'system'
   ruby_command = 'ruby'
 else
   # Install ruby with rbenv
-  node.default['rbenv']['user_installs'] = [
-      {
-          user: node[:redmine][:user],
-          rubies: [node[:redmine][:ruby_version]],
-          global: node[:redmine][:ruby_version],
-          gems: {
-              node[:redmine][:ruby_version] => [
-                  { name: 'bundler' }
-              ]
-          }
-      }
-  ]
-
+  include_recipe 'rbenv::default'
   include_recipe 'ruby_build'
-  include_recipe 'rbenv::user'
 
-  bundle_command = "#{node[:redmine][:home]}/.rbenv/shims/bundle"
-  rake_command = "#{node[:redmine][:home]}/.rbenv/shims/rake"
-  ruby_command = "#{node[:redmine][:home]}/.rbenv/shims/ruby"
+  rbenv_ruby node[:redmine][:ruby_version] do
+    global true
+  end
+
+  rbenv_gem 'bundler' do
+    ruby_version node[:redmine][:ruby_version]
+  end
+
+  bundle_command = "#{node[:rbenv][:root]}/shims/bundle"
+  rake_command = "#{node[:rbenv][:root]}/shims/rake"
+  ruby_command = "#{node[:rbenv][:root]}/shims/ruby"
 end
 
 # Download archive with source code
 bash 'install_redmine' do
   cwd node[:redmine][:home]
   user node[:redmine][:user]
-    code <<-EOH
+  code <<-EOH
     wget http://www.redmine.org/releases/redmine-#{node[:redmine][:version]}.tar.gz;
     tar -xzf redmine-#{node[:redmine][:version]}.tar.gz
   EOH
-  not_if { ::File.exists?("#{node[:redmine][:home]}/redmine-#{node[:redmine][:version]}/Rakefile") }
+  not_if { ::File.exist?("#{node[:redmine][:home]}/redmine-#{node[:redmine][:version]}/Rakefile") }
 end
 
 link "#{node[:redmine][:home]}/redmine" do
@@ -76,12 +71,12 @@ end
 
 # Create database
 case node[:redmine][:db][:type]
-  when 'sqlite'
-    include_recipe 'redmine2::sqlite'
-  when 'mysql'
-    include_recipe 'redmine2::mysql'
-  when 'postgresql'
-    include_recipe 'redmine2::postgresql'
+when 'sqlite'
+  include_recipe 'redmine2::sqlite'
+when 'mysql'
+  include_recipe 'redmine2::mysql'
+when 'postgresql'
+  include_recipe 'redmine2::postgresql'
 end
 
 template "#{node[:redmine][:home]}/redmine-#{node[:redmine][:version]}/config/database.yml" do
@@ -115,31 +110,33 @@ template "#{node[:redmine][:home]}/redmine-#{node[:redmine][:version]}/Gemfile.l
   mode '0664'
 end
 
-bundle_install_command = case node[:redmine][:db][:type]
+bundle_install_command =
+  case node[:redmine][:db][:type]
   when 'sqlite'
     "#{bundle_command} install --without development test mysql postgresql rmagick"
   when 'mysql'
     "#{bundle_command} install --without development test postgresql sqlite rmagick"
   when 'postgresql'
     "#{bundle_command} install --without development test mysql sqlite rmagick"
-end
+  end
+bundle_install_command += ' --path vendor/bundle'
 
 execute bundle_install_command do
   user node[:redmine][:user]
   cwd "#{node[:redmine][:home]}/redmine-#{node[:redmine][:version]}"
-  not_if { ::File.exists?("#{node[:redmine][:home]}redmine-#{node[:redmine][:version]}/db/schema.rb") }
+  not_if { ::File.exist?("#{node[:redmine][:home]}redmine-#{node[:redmine][:version]}/db/schema.rb") }
 end
 
 execute "RAILS_ENV='production' #{rake_command} db:migrate" do
   user node[:redmine][:user]
   cwd "#{node[:redmine][:home]}/redmine-#{node[:redmine][:version]}"
-  not_if { ::File.exists?("#{node[:redmine][:home]}redmine-#{node[:redmine][:version]}/db/schema.rb") }
+  not_if { ::File.exist?("#{node[:redmine][:home]}redmine-#{node[:redmine][:version]}/db/schema.rb") }
 end
 
 execute "RAILS_ENV='production' #{rake_command} generate_secret_token" do
   user node[:redmine][:user]
   cwd "#{node[:redmine][:home]}/redmine-#{node[:redmine][:version]}"
-  not_if { ::File.exists?("#{node[:redmine][:home]}redmine-#{node[:redmine][:version]}/config/initializers/secret_token.rb") }
+  not_if { ::File.exist?("#{node[:redmine][:home]}redmine-#{node[:redmine][:version]}/config/initializers/secret_token.rb") }
 end
 
 include_recipe 'runit'
