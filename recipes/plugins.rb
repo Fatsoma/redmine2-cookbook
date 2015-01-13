@@ -21,7 +21,7 @@ package 'git-core'
 package 'unzip'
 
 bundle_command = "#{node[:rbenv][:root]}/shims/bundle"
-rake_command = "#{node[:rbenv][:root]}/shims/rake"
+rake_command = "#{node[:rbenv][:root]}/shims/bundle exec rake"
 bundle_install_command =
   case node[:redmine][:db][:type]
   when 'sqlite'

@@ -50,7 +50,7 @@ else
   end
 
   bundle_command = "#{node[:rbenv][:root]}/shims/bundle"
-  rake_command = "#{node[:rbenv][:root]}/shims/rake"
+  rake_command = "#{node[:rbenv][:root]}/shims/bundle exec rake"
   ruby_command = "#{node[:rbenv][:root]}/shims/ruby"
 end
 
