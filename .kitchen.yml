@@ -65,6 +65,7 @@ suites:
         host: redmine.dev
         db:
           type: postgresql
+      ssl_data_bag_name: redmine_example_com
       postgresql:
         password:
           postgres: q654321
