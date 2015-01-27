@@ -110,16 +110,17 @@ template "#{node[:redmine][:home]}/redmine-#{node[:redmine][:version]}/Gemfile.l
   mode '0664'
 end
 
-bundle_install_command =
+exclude_db_groups =
   case node[:redmine][:db][:type]
   when 'sqlite'
-    "#{bundle_command} install --without development test mysql postgresql rmagick"
+    %w(mysql postgresql)
   when 'mysql'
-    "#{bundle_command} install --without development test postgresql sqlite rmagick"
+    %w(postgresql sqlite)
   when 'postgresql'
-    "#{bundle_command} install --without development test mysql sqlite rmagick"
+    %w(mysql sqlite)
   end
-bundle_install_command += ' --path vendor/bundle'
+bundle_exclude_groups = node[:redmine][:bundle_exclude] + exclude_db_groups
+bundle_install_command = "#{bundle_command} install --without #{bundle_exclude_groups.join(' ')} --path vendor/bundle"
 
 execute bundle_install_command do
   user node[:redmine][:user]

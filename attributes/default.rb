@@ -9,6 +9,7 @@ default[:redmine][:create_db]    = true
 default[:redmine][:ssl_data_bag_name] = nil
 default[:redmine][:ssl_cert_dir] = "#{node[:nginx][:dir]}/ssl"
 default[:redmine][:ssl_listen_port] = 443
+default[:redmine][:bundle_exclude] = %w(development test rmagick)
 
 default_unless[:redmine][:db]     = {}
 default[:redmine][:db][:type]     = 'sqlite'
