@@ -6,6 +6,10 @@ Installs Redmine v2, a Ruby on Rails ticket tracking and wiki tool
 
 ## Requirements
 
+### Chef
+
+* Chef 12.1+
+
 ### Platform
 
 Tested on ubuntu 12.04, 14.04
@@ -50,7 +54,7 @@ To install via librarian-chef add to your Cheffile the following lines
 
 ```
 cookbook 'rbenv', git: 'https://github.com/RiotGamesCookbooks/rbenv-cookbook'
-cookbook 'redmine2', git: 'https://github.com/aminin/redmine2-cookbook'
+cookbook 'redmine2', git: 'https://github.com/Fatsoma/redmine2-cookbook'
 ```
 
 and run `librarian-chef install`
@@ -92,4 +96,12 @@ bundle exec rake kitchen:all
 
 ## License and Authors
 
-Authors: TODO: List authors
+Authors (on Fatsoma):
+
+* Bill Ruddock
+
+Authors (before forking to Fatsoma):
+
+* Anton Minin
+* Kazuki Matsuda
+* Noah kobayashi

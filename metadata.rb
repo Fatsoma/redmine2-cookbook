@@ -1,10 +1,15 @@
 name             'redmine2'
-maintainer       'Anton Minin'
-maintainer_email 'anton.a.minin@gmail.com'
+maintainer       'Bill Ruddock'
+maintainer_email 'bill.ruddock@fatsoma.com'
 license          'Apache 2.0'
-description      'Installs/Configures redmine2'
+description      'Installs/Configures redmine 2 or 3'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.4.2'
+version          '0.5.0'
+
+issues_url 'https://github.com/Fatsoma/redmine2-cookbook/issues'
+source_url 'https://github.com/Fatsoma/redmine2-cookbook'
+
+chef_version '~> 12'
 
 conflicts 'redmine'
 
