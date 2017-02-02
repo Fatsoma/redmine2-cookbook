@@ -17,11 +17,24 @@
 # limitations under the License.
 #
 
-if %w(localhost 127.0.0.1).include? node[:redmine][:db][:hostname]
-  include_recipe 'mysql::server'
+mysql_service node[:mysql][:service_name] do
+  charset node[:mysql][:charset]
+  data_dir node[:mysql][:data_dir]
+  error_log node[:mysql][:error_log]
+  initial_root_password node[:mysql][:server_root_password]
+  mysqld_options node[:mysql][:mysqld_options]
+  port node[:mysql][:port]
+  run_group node[:mysql][:server_group]
+  run_user node[:mysql][:server_user]
+  package_version node[:mysql][:server_package_version]
+  package_action node[:mysql][:server_package_action]
+  action [:create, :start]
+  only_if { %w(localhost 127.0.0.1).include? node[:redmine][:db][:hostname] }
 end
 
-include_recipe 'mysql::client'
+mysql_client 'default' do
+  action :create
+end
 
 if [true, 'true'].include? node[:redmine][:create_db]
   include_recipe 'database::mysql'

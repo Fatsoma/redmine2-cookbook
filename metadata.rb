@@ -13,8 +13,7 @@ depends 'ruby_build' # https://github.com/fnichol/chef-ruby_build
 depends 'chef_nginx'
 depends 'database'
 depends 'postgresql'
-depends 'mysql', '< 6.0' # before recipes removed
-depends 'mysql-chef_gem', '< 1.0' # transitive dependency, before recipes removed
+depends 'mysql'
 depends 'sqlite'
 depends 'certificate'
 depends 'iptables'

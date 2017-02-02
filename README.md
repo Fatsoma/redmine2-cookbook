@@ -42,6 +42,8 @@ Tested on ubuntu 12.04, 14.04
 | <tt>['redmine']['db']['password']</tt>    | String  | Redmine DB password              | <tt>123456</tt>                       |
 | <tt>['redmine']['init_style']</tt>        | String  | Init system to use for redmine service <tt>upstart</tt>
 
+See mysql recipe for `['mysql']` attributes
+
 ## Usage
 
 To install via librarian-chef add to your Cheffile the following lines
