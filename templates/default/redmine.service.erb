@@ -1,0 +1,16 @@
+[Unit]
+Description=Redmine ticket tracking and wiki tool
+After=network.target
+
+[Service]
+User=<%= @user %>
+Environment=<%= @env_vars.map { |key, value| %("#{key.upcase}=#{value.gsub(/["\\\x0]/, '\\\\\0')}") } %>
+WorkingDirectory=<%= @app_path %>
+ExecStart=<%= @ruby_command %> script/rails s thin -p 3000
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+StandardInput=null
+StandardOutput=
+KillMode=process
+
+[Install]

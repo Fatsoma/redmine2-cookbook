@@ -35,6 +35,7 @@ Tested on ubuntu 12.04, 14.04
 | <tt>['redmine']['db']['username']</tt> | String  | Redmine DB user                  | <tt>redmine</tt>                      |
 | <tt>['redmine']['db']['hostname']</tt> | String  | Redmine DB host                  | <tt>localhost</tt>                    |
 | <tt>['redmine']['db']['password']</tt> | String  | Redmine DB password              | <tt>123456</tt>                       |
+| <tt>['redmine']['init_style']</tt>     | String  | Init system to use for redmine service <tt>upstart</tt>
 
 ## Usage
 

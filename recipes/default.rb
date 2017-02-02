@@ -159,6 +159,24 @@ when 'upstart'
     supports status: true, restart: true, reload: true
     action [:start, :enable]
   end
+when 'systemd'
+  template '/etc/systemd/system/redmine.service' do
+    source 'redmine.service.erb'
+    variables(
+      env_vars: {
+        'RAILS_ENV' => node[:redmine][:environment]
+      },
+      user: node[:redmine][:user],
+      app_path: "#{node[:redmine][:home]}/redmine",
+      ruby_command: ruby_command
+    )
+  end
+
+  service 'redmine' do
+    provider Chef::Provider::Service::Systemd
+    supports status: true, restart: true, reload: true
+    action [:start, :enable]
+  end
 when 'runit'
   runit_service 'redmine' do
     log_template_name 'redmine'
