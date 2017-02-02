@@ -16,7 +16,6 @@ Tested on ubuntu 12.04, 14.04
 * [rbenv](https://github.com/RiotGamesCookbooks/rbenv-cookbook)
 * [ruby_build](https://github.com/fnichol/chef-ruby_build)
 * chef_nginx
-* runit
 * database
 
 ## Attributes

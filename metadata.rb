@@ -11,7 +11,6 @@ conflicts 'redmine'
 depends 'rbenv'      # https://github.com/RiotGamesCookbooks/rbenv-cookbook
 depends 'ruby_build' # https://github.com/fnichol/chef-ruby_build
 depends 'nginx'
-depends 'runit'
 depends 'database'
 depends 'postgresql'
 depends 'mysql', '< 6.0' # before recipes removed
