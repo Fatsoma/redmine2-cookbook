@@ -188,7 +188,7 @@ certificate_manage node[:redmine][:ssl_data_bag_name].to_s do
   not_if { node[:redmine][:ssl_data_bag_name].nil? }
 end
 
-include_recipe 'nginx'
+include_recipe 'chef_nginx'
 
 template "#{node[:nginx][:dir]}/sites-available/redmine" do
   source 'nginx-redmine.erb'
