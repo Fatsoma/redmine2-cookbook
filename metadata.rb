@@ -1,21 +1,24 @@
 name             'redmine2'
-maintainer       'Anton Minin'
-maintainer_email 'anton.a.minin@gmail.com'
+maintainer       'Bill Ruddock'
+maintainer_email 'bill.ruddock@fatsoma.com'
 license          'Apache 2.0'
-description      'Installs/Configures redmine2'
+description      'Installs/Configures redmine 2 or 3'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.4.2'
+version          '0.5.0'
+
+issues_url 'https://github.com/Fatsoma/redmine2-cookbook/issues'
+source_url 'https://github.com/Fatsoma/redmine2-cookbook'
+
+chef_version '~> 12'
 
 conflicts 'redmine'
 
 depends 'rbenv'      # https://github.com/RiotGamesCookbooks/rbenv-cookbook
 depends 'ruby_build' # https://github.com/fnichol/chef-ruby_build
-depends 'nginx'
-depends 'runit'
+depends 'chef_nginx'
 depends 'database'
 depends 'postgresql'
-depends 'mysql', '< 6.0' # before recipes removed
-depends 'mysql-chef_gem', '< 1.0' # transitive dependency, before recipes removed
+depends 'mysql'
 depends 'sqlite'
 depends 'certificate'
 depends 'iptables'
@@ -45,6 +48,12 @@ attribute 'redmine/user',
           default:         'redmine',
           recipes:         ['redmine2::default']
 
+attribute 'redmine/prefix',
+          display_name:    'Redmine URL prefix',
+          description:     'URL path prefix for Redmine application',
+          default:         nil,
+          recipes:         ['redmine2::default']
+
 attribute 'redmine/ruby_version',
           display_name:    'Redmine Ruby Version',
           description:     'Version of Ruby to run Redmine',
@@ -57,10 +66,46 @@ attribute 'redmine/version',
           default:         '2.6.0',
           recipes:         ['redmine2::default']
 
+attribute 'redmine/bundle_exclude',
+          display_name:    'Bundle exclude groups',
+          description:     'Exclude groups from bundle',
+          default:         %w(development test rmagick),
+          recipes:         ['redmine2::default']
+
+attribute 'redmine/listen_port',
+          display_name:    'Listen port',
+          description:     'Port to listen on in nginx',
+          default:         80,
+          recipes:         ['redmine2::default']
+
 attribute 'redmine/create_db',
           display_name:    'Create DB on install',
           description:     'Whether to create DB',
           default:         'true',
+          recipes:         ['redmine2::default']
+
+attribute 'redmine/ssl_data_bag_name',
+          display_name:    'SSL/TLS certificate data bag name',
+          description:     'Data bag holding SSL/TLS certificate',
+          default:         nil,
+          recipes:         ['redmine2::default']
+
+attribute 'redmine/ssl_cert_dir',
+          display_name:    'SSL/TLS certificate directory',
+          description:     'Directory to install SSL/TLS certificate to',
+          default:         '/etc/nginx/ssl',
+          recipes:         ['redmine2::default']
+
+attribute 'redmine/ssl_listen_port',
+          display_name:    'HTTPS Listen port',
+          description:     'Port to listen on in nginx for HTTPS',
+          default:         443,
+          recipes:         ['redmine2::default']
+
+attribute 'redmine/environment',
+          display_name:    'Rails environment',
+          description:     'Environment to run rails in',
+          default:         'node.chef_environment',
           recipes:         ['redmine2::default']
 
 attribute 'redmine/db',
@@ -97,4 +142,11 @@ attribute 'redmine/db/password',
           display_name:    'Redmine DB password',
           description:     'Redmine DB password',
           default:         '123456',
+          recipes:         ['redmine2::default']
+
+attribute 'redmine/init_style',
+          display_name:    'Redmine service init style',
+          description:     'Init system to use',
+          choice:          %w(upstart systemd),
+          default:         'upstart',
           recipes:         ['redmine2::default']

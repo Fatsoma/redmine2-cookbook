@@ -140,16 +140,43 @@ execute "RAILS_ENV='production' #{rake_command} generate_secret_token" do
   not_if { ::File.exist?("#{node[:redmine][:home]}redmine-#{node[:redmine][:version]}/config/initializers/secret_token.rb") }
 end
 
-include_recipe 'runit'
+case node[:redmine][:init_style]
+when 'upstart'
+  template '/etc/init/redmine.conf' do
+    source 'redmine-upstart.conf.erb'
+    variables(
+      env_vars: {
+        'RAILS_ENV' => node[:redmine][:environment]
+      },
+      user: node[:redmine][:user],
+      app_path: "#{node[:redmine][:home]}/redmine",
+      ruby_command: ruby_command
+    )
+  end
 
-runit_service 'redmine' do
-  log_template_name 'redmine'
-  run_template_name 'redmine'
-  options(home_path:   node[:redmine][:home],
-          app_path:    "#{node[:redmine][:home]}/redmine",
-          target_user: node[:redmine][:user],
-          target_ruby: ruby_command,
-          target_env:  'production')
+  service 'redmine' do
+    provider Chef::Provider::Service::Upstart
+    supports status: true, restart: true, reload: true
+    action [:start, :enable]
+  end
+when 'systemd'
+  template '/etc/systemd/system/redmine.service' do
+    source 'redmine.service.erb'
+    variables(
+      env_vars: {
+        'RAILS_ENV' => node[:redmine][:environment]
+      },
+      user: node[:redmine][:user],
+      app_path: "#{node[:redmine][:home]}/redmine",
+      ruby_command: ruby_command
+    )
+  end
+
+  service 'redmine' do
+    provider Chef::Provider::Service::Systemd
+    supports status: true, restart: true, reload: true
+    action [:start, :enable]
+  end
 end
 
 certificate_manage node[:redmine][:ssl_data_bag_name].to_s do
@@ -161,7 +188,7 @@ certificate_manage node[:redmine][:ssl_data_bag_name].to_s do
   not_if { node[:redmine][:ssl_data_bag_name].nil? }
 end
 
-include_recipe 'nginx'
+include_recipe 'chef_nginx'
 
 template "#{node[:nginx][:dir]}/sites-available/redmine" do
   source 'nginx-redmine.erb'

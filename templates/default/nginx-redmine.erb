@@ -30,8 +30,8 @@ server {
 
   client_max_body_size 20M;
 
-  # Заметка: Должен совпадать с префиксом заданным при конфигурации thin
-  #          или / если никакого префикса не задано
+  # NOTE: Must match the prefix specified in the configuration of thin
+  #          or / if no prefix is specified
 <% if node[:redmine][:prefix] -%>
   location ~* ^<%= node[:redmine][:prefix] %>/(?<file>(javascripts|stylesheets|images|help|themes|plugin_assets).*) {
     alias <%= @app_path %>/public/$static_file;
@@ -46,10 +46,10 @@ server {
     error_page 404  404.html;
     error_page 500 502 503 504  500.html;
 
-    # Отправляем важную информацию по HTTPS
-    # Удалите, если ssl не используется
-    # Заметка 1:  Измените $host на SSL CN если используется несколько хостов
-    # Заметка 2:  Учитывайте префикс заданный в конфиге
+    # Send important information over HTTPS
+    # Remove when not using SSL
+    # Note 1: Change $host to SSL CN if multiple hosts
+    # Note 2: Note the prefix specified in the config file
     #rewrite ^/redmine/login(.*) https://$host$request_uri permanent;
     #rewrite ^/redmine/my/account(.*) https://$host$request_uri permanent;
     #rewrite ^/redmine/my/password(.*) https://$host$request_uri permanent;
