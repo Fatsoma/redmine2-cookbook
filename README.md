@@ -65,7 +65,7 @@ Configure your role/node e.g.:
 }
 ```
 
-## Runing tests
+## Running tests
 
 ```
 bundle exec rake foodcritic
