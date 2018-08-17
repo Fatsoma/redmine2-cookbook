@@ -26,8 +26,8 @@ Tested on ubuntu 12.04, 14.04
 | <tt>['redmine']['home']</tt>           | String  | Location for Redmine application | <tt>/home/redmine</tt>                |
 | <tt>['redmine']['host']</tt>           | String  | Redmine Domain                   | <tt>redmine.example.com</tt>          |
 | <tt>['redmine']['user']</tt>           | String  | Owner of redmine files           | <tt>redmine</tt>                      |
-| <tt>['redmine']['ruby_version']</tt>   | String  | Redmine Ruby Version             | <tt>1.9.3-p484</tt>                   |
-| <tt>['redmine']['version']</tt>        | String  | Redmine version                  | <tt>2.6.0</tt>                        |
+| <tt>['redmine']['ruby_version']</tt>   | String  | Redmine Ruby Version             | <tt>2.3.1</tt>                        |
+| <tt>['redmine']['version']</tt>        | String  | Redmine version                  | <tt>3.3.0</tt>                        |
 | <tt>['redmine']['bundle_exclude']</tt> | String  | Exclude groups from bundle       | <tt>%w(development test rmagick)</tt> |
 | <tt>['redmine']['db']['type']</tt>     | String  | Type of redmine database         | <tt>postgresql</tt>                   |
 | <tt>['redmine']['db']['dbname']</tt>   | String  | Redmine DB name                  | <tt>redmine</tt>                      |
