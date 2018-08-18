@@ -18,14 +18,14 @@ describe package('bundler') do
   it { should be_installed.by('gem') }
 end
 
-describe file('/home/redmine/redmine-2.6.0') do
+describe file('/home/redmine/redmine-3.3.0') do
   it { should be_directory }
 end
 
 describe file('/home/redmine/redmine') do
-  it { should be_linked_to '/home/redmine/redmine-2.6.0' }
+  it { should be_linked_to '/home/redmine/redmine-3.3.0' }
 end
 
 describe process('ruby') do
-  its(:args) { should match(/script\/rails s thin -p 3000/) }
+  its(:args) { should match(%r{bin/rails s thin -b 127.0.0.1 -p 3000}) }
 end

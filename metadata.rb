@@ -48,13 +48,13 @@ attribute 'redmine/user',
 attribute 'redmine/ruby_version',
           display_name:    'Redmine Ruby Version',
           description:     'Version of Ruby to run Redmine',
-          default:         '1.9.3-p484',
+          default:         '2.3.1',
           recipes:         ['redmine2::default']
 
 attribute 'redmine/version',
           display_name:    'Redmine version',
           description:     'Redmine version',
-          default:         '2.6.0',
+          default:         '3.3.0',
           recipes:         ['redmine2::default']
 
 attribute 'redmine/create_db',
