@@ -27,5 +27,5 @@ describe file('/home/redmine/redmine') do
 end
 
 describe process('ruby') do
-  its(:args) { should match(%r{bin/rails s thin -p 3000}) }
+  its(:args) { should match(%r{bin/rails s thin -b 127.0.0.1 -p 3000}) }
 end
